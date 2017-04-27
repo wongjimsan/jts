@@ -10,9 +10,9 @@ build/
 target/  
 bin/  
 dependency-reduced-pom.xml  
-.classpath  
-.project  
-.settings/  
+*/.classpath  
+*/.project  
+*/.settings/  
 *.iml  
 *.ipr  
 *.iws  
