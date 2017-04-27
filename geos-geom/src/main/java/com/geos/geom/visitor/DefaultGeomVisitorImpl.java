@@ -24,6 +24,10 @@ public class DefaultGeomVisitorImpl implements GeomVisitor {
 	}
 
 	@Override
+	public void visit(LinearRing lineraRing) {
+	}
+	
+	@Override
 	public void visit(Polygon polygon) {
 	}
 

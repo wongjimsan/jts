@@ -7,31 +7,45 @@ public class WKTWriterImpl extends DefaultGeomVisitorImpl implements WKTWriter {
 
 	private StringBuilder wktContent;
 
+	public WKTWriterImpl() {
+	}
+
+	@Override
+	public String write(Geometry geometry) {
+		StringBuilder wkt = new StringBuilder();
+		wkt.append(geometry.geometryType().toWKT());
+		wktContent = new StringBuilder();
+		geometry.apply(this);
+		return wkt.append("(").append(wktContent.toString()).append(")").toString();
+	}
+
 	@Override
 	public void visit(Point point) {
-		CoordinateSequence cs = point.coordinateSequence();
-		writeCoordiantes(cs);
+		writeG(point);
 	}
 
 	@Override
 	public void visit(LineString lineString) {
-		CoordinateSequence cs = lineString.coordinateSequence();
-		writeCoordiantes(cs);
+		writeG(lineString);
 	}
 
 	@Override
-	public void visit(Line line) {
-
+	public void visit(LinearRing linearRing) {
+		wktContent.append("(");
+		writeG(linearRing);
+		wktContent.append("),");
 	}
 
 	@Override
 	public void visit(Polygon polygon) {
-
-	}
-
-	@Override
-	public void visit(Triangle triangle) {
-
+		LinearRing exteror = polygon.getExterorRing();
+		visit(exteror);
+		int size = polygon.numInteriorRings();
+		for (int i = 0; i < size; i++) {
+			visit(polygon.interiorRingN(i));
+		}
+		int length = wktContent.length();
+		wktContent.deleteCharAt(length - 1);
 	}
 
 	@Override
@@ -43,49 +57,44 @@ public class WKTWriterImpl extends DefaultGeomVisitorImpl implements WKTWriter {
 			WKTWriter writer = new WKTWriterImpl();
 			sb.append(writer.write(geometry)).append(",");
 		}
-		wktContent.append(sb.substring(0, sb.length() - 1));
+		int length = sb.length();
+		sb.deleteCharAt(length - 1);
+		wktContent.append(sb.toString());
 	}
 
 	@Override
 	public void visit(MultiPoint multiPoint) {
-		CoordinateSequence cs = multiPoint.coordinateSequence();
-		writeCoordiantes(cs);
+		writeG(multiPoint);
 	}
 
 	@Override
 	public void visit(MultiLineString multiLineString) {
-
+		writeGC(multiLineString);
 	}
 
 	@Override
 	public void visit(MultiPolygon multiPolygon) {
-
+		writeGC(multiPolygon);
 	}
 
-	@Override
-	public void visit(PolyhedralSurface polyhedralSurface) {
-
+	private void writeGC(GeometryCollection geometryCollection) {
+		int size = geometryCollection.numGeometries();
+		for (int i = 0; i < size; i++) {
+			Geometry geometry = geometryCollection.geometryN(i);
+			wktContent.append("(");
+			geometry.apply(this);
+			wktContent.append("),");
+		}
+		int length = wktContent.length();
+		wktContent.deleteCharAt(length - 1);
 	}
 
-	@Override
-	public void visit(TIN tin) {
-
+	private void writeG(Geometry geometry) {
+		CoordinateSequence cs = geometry.coordinateSequence();
+		writeCoordinates(cs);
 	}
 
-	@Override
-	public String write(Geometry geometry) {
-		StringBuilder wkt = new StringBuilder();
-		wkt.append(geometry.geometryType().toWKT());
-		process(geometry);
-		return wkt.append("(").append(wktContent.toString()).append(")").toString();
-	}
-
-	private void process(Geometry geometry) {
-		wktContent = new StringBuilder();
-		geometry.apply(this);
-	}
-
-	private void writeCoordiantes(CoordinateSequence cs) {
+	private void writeCoordinates(CoordinateSequence cs) {
 		StringBuilder sb = new StringBuilder();
 		int size = cs.size();
 		for (int i = 0; i < size; i++) {

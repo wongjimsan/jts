@@ -15,6 +15,9 @@ public class WKTWriterTest {
 	private LineString lineString;
 	private GeometryCollection geometryCollection;
 	private MultiPoint multiPoint;
+	private Polygon polygon;
+	private MultiLineString mls;
+	private MultiPolygon mpl;
 
 	public WKTWriterTest() {
 
@@ -61,6 +64,31 @@ public class WKTWriterTest {
 		lineString.addPoint(point);
 		lineString.addPoint(point);
 	}
+	
+	@Test
+	public void polygonTest() {
+		createPolygon();
+		System.out.println(writer.write(polygon));
+	}
+	
+	private void createPolygon() {
+		createPoint();
+		LinearRing er = new LinearRing(4326);
+		er.addPoint(point);
+		er.addPoint(point);
+		er.addPoint(point);
+		er.addPoint(point);
+		er.addPoint(point);
+		LinearRing ir = new LinearRing(4326);
+		ir.addPoint(point);
+		ir.addPoint(point);
+		ir.addPoint(point);
+		ir.addPoint(point);
+		ir.addPoint(point);
+		polygon = new Polygon(er,4326);
+		polygon.addInteriorRing(ir);
+		polygon.addInteriorRing(ir);
+	}
 
 	@Test
 	public void geometryCollectionTest() {
@@ -91,5 +119,31 @@ public class WKTWriterTest {
 		multiPoint.addGeometry(point);
 		multiPoint.addGeometry(point);
 		multiPoint.addGeometry(point);
+	}
+	
+	@Test
+	public void TestMultiLineString() {
+		createMultiLineString();
+		System.out.println(writer.write(mls));
+	}
+	
+	private void createMultiLineString() {
+		createLineString();
+		mls = new MultiLineString(4326);
+		mls.addGeometry(lineString);
+		mls.addGeometry(lineString);
+	}
+	
+	@Test
+	public void TestMultiPolygon() {
+		createMultiPolygon();
+		System.out.println(writer.write(mpl));
+	}
+	
+	private void createMultiPolygon() {
+		createPolygon();
+		mpl = new MultiPolygon(4326);
+		mpl.addGeometry(polygon);
+		mpl.addGeometry(polygon);
 	}
 }

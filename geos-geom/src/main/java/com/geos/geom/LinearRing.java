@@ -1,5 +1,7 @@
 package com.geos.geom;
 
+import com.geos.geom.visitor.GeomVisitor;
+
 public class LinearRing extends LineString {
 
 	private static final long serialVersionUID = 6646315907673558749L;
@@ -18,5 +20,10 @@ public class LinearRing extends LineString {
 	@Override
 	public boolean isRing() {
 		return true;
+	}
+
+	@Override
+	public void apply(GeomVisitor visitor) {
+		visitor.visit(this);
 	}
 }

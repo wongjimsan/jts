@@ -11,6 +11,8 @@ public interface GeomVisitor {
 
 	void visit(Line line);
 
+	void visit(LinearRing lineraRing);
+
 	void visit(Polygon polygon);
 
 	void visit(Triangle triangle);

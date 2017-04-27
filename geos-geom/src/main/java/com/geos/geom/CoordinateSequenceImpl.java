@@ -16,7 +16,7 @@ public class CoordinateSequenceImpl extends DefaultGeomVisitorImpl implements Co
 	public int size() {
 		return coordinates.size();
 	}
-	
+
 	@Override
 	public Coordinate get(int index) {
 		return coordinates.get(index);
@@ -35,6 +35,12 @@ public class CoordinateSequenceImpl extends DefaultGeomVisitorImpl implements Co
 			Point point = lineString.pointN(i);
 			point.apply(this);
 		}
+	}
+
+	@Override
+	public void visit(LinearRing linearRing) {
+		LineString lineString = (LineString) linearRing;
+		visit(lineString);
 	}
 
 	@Override
