@@ -1,4 +1,4 @@
-*.DS_Store  
+**/.DS_Store  
 Thumbs.db  
 *.sw?  
 .#*  
@@ -7,13 +7,13 @@ Thumbs.db
 *.sublime-*  
 .gradle/  
 build/  
-target/  
+**/target/
 bin/  
 dependency-reduced-pom.xml  
-*/.classpath  
-*/.project  
-*/.settings/  
+**/.classpath  
+**/.project  
+**/.settings/  
 *.iml  
 *.ipr  
 *.iws  
-*.idea  
+**/.idea  
